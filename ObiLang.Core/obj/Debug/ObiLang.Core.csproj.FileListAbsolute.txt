@@ -1,0 +1,11 @@
+C:\Users\ObisoftDev\source\repos\ObiLang\ObiLang.Core\bin\Debug\ObiLang.Core.dll.config
+C:\Users\ObisoftDev\source\repos\ObiLang\ObiLang.Core\bin\Debug\ObiLang.Core.dll
+C:\Users\ObisoftDev\source\repos\ObiLang\ObiLang.Core\bin\Debug\ObiLang.Core.pdb
+C:\Users\ObisoftDev\source\repos\ObiLang\ObiLang.Core\obj\Debug\ObiLang.Core.dll
+C:\Users\ObisoftDev\source\repos\ObiLang\ObiLang.Core\obj\Debug\ObiLang.Core.pdb
+C:\Users\ObisoftDev\source\repos\ObiLang\ObiLang.Core\obj\Debug\ObiLang.Core.csprojAssemblyReference.cache
+D:\Programacion\Codigos\C#\ObiLang\ObiLang.Core\bin\Debug\ObiLang.Core.dll.config
+D:\Programacion\Codigos\C#\ObiLang\ObiLang.Core\bin\Debug\ObiLang.Core.dll
+D:\Programacion\Codigos\C#\ObiLang\ObiLang.Core\bin\Debug\ObiLang.Core.pdb
+D:\Programacion\Codigos\C#\ObiLang\ObiLang.Core\obj\Debug\ObiLang.Core.dll
+D:\Programacion\Codigos\C#\ObiLang\ObiLang.Core\obj\Debug\ObiLang.Core.pdb

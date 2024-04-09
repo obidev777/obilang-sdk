@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ namespace ObiLang.Core
 
         public void AddAssembly(Assembly asm) => AsemblyList.Add(asm);
         public void AddAssembly(string path) => AsemblyList.Add(Assembly.LoadFile(path));
+        public void AddAssembly(byte[] bytes) => AsemblyList.Add(Assembly.Load(bytes));
 
         public Assembly[] GetAssemblies()
         {
@@ -188,7 +190,7 @@ namespace ObiLang.Core
         public bool Recolect(string cmd)
         {
             string[] list = new string[] { 
-            "for","if","while"
+            "for","if","while","func"
             };
             foreach (var item in list) if (item == cmd) return true;
             return false;
@@ -455,6 +457,11 @@ namespace ObiLang.Core
                         if (fargs != null)
                             argcount = fargs.Length;
                         object oinstance = GetVar(vname);
+                        if (oinstance.GetType() == typeof(FUNC))
+                        {
+                            argcount = 1;
+                            fargs = new object[] { fargs };
+                        }
                         MethodInfo method = GetMethodFrom(vname, mname, argcount);
                         
                         if (method!=null)
@@ -588,8 +595,28 @@ namespace ObiLang.Core
                             reclines.Add(ll);
                         }
                         i = ri;
-                        var cond = new CONDITIONAL(reclines.ToArray(), bool.Parse(GetArgs(arg)[0].ToString()),cmd);
-                        cond.Execute(this);
+                        if (CONDITIONAL.IS(cmd))
+                        {
+                            var cond = new CONDITIONAL(reclines.ToArray(), bool.Parse(GetArgs(arg)[0].ToString()), cmd);
+                            cond.Execute(this);
+                        }
+                        if (FOR.IS(cmd))
+                        {
+                            string[] tsks = arg.Replace(" in ", "#").Split('#');
+                            var frd = new FOR(reclines.ToArray(),tsks[0],GetArgs(tsks[1])[0],cmd);
+                            frd.Execute(this);
+                        }
+                        if (FUNC.IS(cmd))
+                        {
+                            string[] tsks = arg.Replace($"{cmd} ","").Split(new char[] { ' ' },2);
+                            string[] argsname = null;
+                            if (tsks.Length > 1)
+                            {
+                                argsname = tsks[1].Split(',');
+                            }
+                            var func = new FUNC(reclines.ToArray(), argsname, cmd,this);
+                            AddVar(tsks[0], func);
+                        }
                         continue;
                     }
                     else if (cmd == "var")
@@ -623,24 +650,45 @@ namespace ObiLang.Core
                         string args = line.Split(new char[] { ' ' }, 2)[1];
                         var path = GetArgs(args)[0].ToString();
 
-                        if (!path.ToString().EndsWith(".dll"))
+                        if (!path.Contains("http://") && !path.Contains("https://"))
                         {
-                            path = path + ".dll";
-                        }
+                            if (!path.ToString().EndsWith(".dll"))
+                            {
+                                path = path + ".dll";
+                            }
 
-                        if (File.Exists(path)) { 
-                        
-                        }
-                        else if (File.Exists(new FileInfo(PATH).Directory.FullName + "\\" + path))
-                        {
-                            path = new FileInfo(PATH).Directory.FullName + "\\" + path;
+                            if (File.Exists(path))
+                            {
+
+                            }
+                            else if (File.Exists(new FileInfo(PATH).Directory.FullName + "\\" + path))
+                            {
+                                path = new FileInfo(PATH).Directory.FullName + "\\" + path;
+                            }
+                            else
+                            {
+                                path = new FileInfo(Process.GetCurrentProcess().MainModule.FileName).Directory + "\\libs\\" + path;
+                            }
+
+                            AddAssembly(path);
                         }
                         else
                         {
-                            path = new FileInfo(Process.GetCurrentProcess().MainModule.FileName).Directory + "\\libs\\" + path;
+                            var req = HttpWebRequest.Create(path);
+                            req.Method = "GET";
+                            using(Stream stream = req.GetResponse().GetResponseStream())
+                            {
+                                List<byte> asmbytes = new List<byte>();
+                                byte[] bytes = new byte[1024];
+                                int read = bytes.Length;
+                                while((read = stream.Read(bytes, 0, bytes.Length))!=0)
+                                {
+                                    byte[] nbs = new byte[read];
+                                    Array.Copy(bytes, 0, nbs,0, read);
+                                }
+                                AddAssembly(asmbytes.ToArray());
+                            }
                         }
-
-                        AddAssembly(path);
                     }
                     else if (cmd == "del")
                     {
@@ -654,7 +702,7 @@ namespace ObiLang.Core
                 }
                 catch (Exception ex)
                 {
-                    result += $"LINE:{i} {line}:{ex.Message}\n";
+                    result += $"LINE:{i+1} {line}:{ex.Message}\n";
                 }
         }
 

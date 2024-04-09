@@ -32,5 +32,18 @@ namespace ObiLang.Core
         {
             engine.Vars.Remove(var);
         }
+
+        public List<string> GetList()
+        {
+            List<string> ret = new List<string>();
+            ret.Add("jih");
+            return ret;
+        }
+        public Dictionary<string,string> GetDict()
+        {
+            Dictionary<string, string> ret = new Dictionary<string, string>();
+            ret.Add("jih","LLL");
+            return ret;
+        }
     }
 }

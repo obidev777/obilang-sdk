@@ -47,6 +47,8 @@
     <Compile Include="CONDITIONAL.cs" />
     <Compile Include="DICT.cs" />
     <Compile Include="ENV.cs" />
+    <Compile Include="FOR.cs" />
+    <Compile Include="FUNC.cs" />
     <Compile Include="ObiLangEngine.cs" />
     <Compile Include="OBJFUNCS.cs" />
   </ItemGroup>

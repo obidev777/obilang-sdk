@@ -142,6 +142,38 @@ namespace ObiLang.Core
             }
             return null;
         }
+        public EventInfo GetEventFrom(string varname, string mname, int argscount = 0)
+        {
+            if (Vars != null)
+            {
+                object vvar = GetVar(varname);
+                if (vvar != null)
+                {
+                    if (vvar.GetType().Name != "RuntimeType")
+                    {
+                        foreach (var m in vvar.GetType().GetEvents())
+                        {
+                            if (m.Name == mname)
+                            {
+                                return m;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var m in ((Type)vvar).GetEvents())
+                        {
+                            if (m.Name == mname)
+                            {
+                                return m;
+                            }
+                        }
+                    }
+
+                }
+            }
+            return null;
+        }
         public FieldInfo GetFieldFrom(string varname, string mname, int argscount = 0)
         {
             if (Vars != null)
@@ -204,7 +236,7 @@ namespace ObiLang.Core
             }
             return null;
         }
-        public object[] GetArgs(string args, bool addengine = false)
+        public object[] GetArgs(string args, bool addengine = false,bool gettyping=false)
         {
             if (args == "") return null;
             if (args == "none") return new object[] { null };
@@ -470,6 +502,11 @@ namespace ObiLang.Core
                             {
                                 oinstance = null;
                             }
+                            if (gettyping)
+                            {
+                                result.Add(method);
+                                continue;
+                            }
                             object ret = method.Invoke(oinstance, fargs);
                             result.Add(ret);
                         }
@@ -481,6 +518,11 @@ namespace ObiLang.Core
                                 if (property.GetMethod.IsStatic)
                                 {
                                     oinstance = null;
+                                }
+                                if (gettyping)
+                                {
+                                    result.Add(property);
+                                    continue;
                                 }
                                 object ret = property.GetValue(oinstance);
                                 result.Add(ret);
@@ -494,12 +536,30 @@ namespace ObiLang.Core
                                     {
                                         oinstance = null;
                                     }
+                                    if (gettyping)
+                                    {
+                                        result.Add(field);
+                                        continue;
+                                    }
                                     object ret = field.GetValue(oinstance);
                                     result.Add(ret);
                                 }
                                 else
                                 {
-                                    throw new Exception($"Method Not Exist {vname}.{mname}!");
+                                    EventInfo ev = GetEventFrom(vname, mname, argcount);
+                                    if (ev != null)
+                                    {
+                                        if (gettyping)
+                                        {
+                                            result.Add(ev);
+                                            continue;
+                                        }
+                                        result.Add(ev);
+                                    }
+                                    else
+                                    {
+                                        throw new Exception($"Method Not Exist {vname}.{mname}!");
+                                    }
                                 }
                             }
                         }
@@ -522,7 +582,32 @@ namespace ObiLang.Core
                 }
                 else
                 {
-                    result.Add(long.Parse(arg));
+                    object val = null;
+                    if (arg.Contains("(int)"))
+                    {
+                        val = int.Parse(arg.Replace("(int)",""));
+                    }
+                    else if (arg.Contains("(float)"))
+                    {
+                        val = float.Parse(arg.Replace("(float)", ""));
+                    }
+                    else if (arg.Contains("(double)"))
+                    {
+                        val = double.Parse(arg.Replace("(double)", ""));
+                    }
+                    else if (arg.Contains("(str)"))
+                    {
+                        val = arg.Replace("(str)", "").ToString();
+                    }
+                    else if (arg.Contains("(long)"))
+                    {
+                        val = arg.Replace("(str)", "").ToString();
+                    }
+                    else
+                    {
+                        val = int.Parse(arg);
+                    }
+                    result.Add(val);
                 }
             }
             return result.ToArray();
@@ -629,6 +714,47 @@ namespace ObiLang.Core
                             Vars.Remove(name);
                         }
                         Vars.Add(name, args[0]);
+                    }
+                    else if (cmd == "out")
+                    {
+                        string[] vartokens = arg.Replace("::","#").Replace(" : ", ":").Split(new char[] { ':' }, 2);
+                        string name = vartokens[0];
+                        if (name.Contains("#"))
+                        {
+                            name = name.Replace("#", "::");
+                        }
+                        bool is_delegate = false;
+                        string vn = vartokens[1];
+                        if (vn.Contains("(delegate)"))
+                        {
+                            is_delegate = true;
+                            vn = vn.Replace("(delegate)","");
+                        }
+                        object value = GetArgs(vn)[0];
+                        object property = GetArgs(name, gettyping: true)[0];
+                        object varobj = GetVar(name.Replace("::", "#").Split('#')[0]);
+                        try
+                        {
+                            ((PropertyInfo)property).SetValue(varobj, value);
+                        }
+                        catch
+                        {
+                            try
+                            {
+                                ((FieldInfo)property).SetValue(varobj, value);
+                            }
+                            catch{
+
+                                try
+                                {
+                                    ((FUNC)value).SetEventHandle((EventInfo)property,varobj);
+                                }
+                                catch(Exception ex){ 
+                                
+                                }
+
+                            }
+                        }
                     }
                     else if (cmd == "use" && !line.Contains("->"))
                     {

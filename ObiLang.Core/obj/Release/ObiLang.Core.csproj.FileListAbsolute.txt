@@ -1,0 +1,6 @@
+D:\Programacion\Codigos\C#\ObiLang\ObiLang.Core\bin\Release\ObiLang.Core.dll.config
+D:\Programacion\Codigos\C#\ObiLang\ObiLang.Core\bin\Release\ObiLang.Core.dll
+D:\Programacion\Codigos\C#\ObiLang\ObiLang.Core\bin\Release\ObiLang.Core.pdb
+D:\Programacion\Codigos\C#\ObiLang\ObiLang.Core\obj\Release\ObiLang.Core.dll
+D:\Programacion\Codigos\C#\ObiLang\ObiLang.Core\obj\Release\ObiLang.Core.pdb
+D:\Programacion\Codigos\C#\ObiLang\ObiLang.Core\obj\Release\ObiLang.Core.csprojAssemblyReference.cache

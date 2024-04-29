@@ -1,0 +1,8 @@
+D:\Programacion\Codigos\C#\ObiLang\gui.forms\bin\Debug\gui.forms.dll.config
+D:\Programacion\Codigos\C#\ObiLang\gui.forms\bin\Debug\gui.forms.dll
+D:\Programacion\Codigos\C#\ObiLang\gui.forms\bin\Debug\gui.forms.pdb
+D:\Programacion\Codigos\C#\ObiLang\gui.forms\obj\Debug\gui.forms.Properties.Resources.resources
+D:\Programacion\Codigos\C#\ObiLang\gui.forms\obj\Debug\gui.forms.csproj.GenerateResource.cache
+D:\Programacion\Codigos\C#\ObiLang\gui.forms\obj\Debug\gui.forms.dll
+D:\Programacion\Codigos\C#\ObiLang\gui.forms\obj\Debug\gui.forms.pdb
+D:\Programacion\Codigos\C#\ObiLang\gui.forms\obj\Debug\gui.forms.csprojAssemblyReference.cache

@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ARRAY.cs" />
+    <Compile Include="CacheHandle.cs" />
     <Compile Include="CONDITIONAL.cs" />
     <Compile Include="DICT.cs" />
     <Compile Include="ENV.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="FUNC.cs" />
     <Compile Include="ObiLangEngine.cs" />
     <Compile Include="OBJFUNCS.cs" />
+    <Compile Include="OPERATOR.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

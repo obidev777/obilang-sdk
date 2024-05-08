@@ -10,18 +10,21 @@ namespace ObiLang.Core
     {
         public string CMD { get; set; }
         public string[] Lines;
+        public string[] ElseLines;
         public bool Condition = false;
+        public string catchname = "catch";
 
         public static bool IS(string cmd)
         {
-            return cmd.Contains("if") || cmd.Contains("while");
+            return cmd.Contains("if") || cmd.Contains("while") || cmd.Contains("try");
         }
 
-        public CONDITIONAL(string[] lines,bool condition,string cmd)
+        public CONDITIONAL(string[] lines,string[] elselines,bool condition,string cmd)
         {
             CMD = cmd;
             Lines = lines;
             Condition = condition;
+            ElseLines = elselines;
         }
 
         public object Execute(ObiLangEngine engine)
@@ -31,11 +34,29 @@ namespace ObiLang.Core
                 {
                     engine.Logic(Lines);
                 }
+                else
+                {
+                    if (ElseLines != null)
+                        engine.Logic(ElseLines);
+                }
             if (CMD == "while")
                 while (Condition)
                 {
                     engine.Logic(Lines,this);
                 }
+            if (CMD == "try")
+            {
+                try
+                {
+                    engine.Logic(Lines);
+                }
+                catch(Exception ex)
+                {
+                    engine.AddVar(catchname,ex);
+                    engine.Logic(ElseLines);
+                    engine.RemoveVar(catchname);
+                }
+            }
             return null;
         }
     }

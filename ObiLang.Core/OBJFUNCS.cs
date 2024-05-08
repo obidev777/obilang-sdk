@@ -45,5 +45,67 @@ namespace ObiLang.Core
             ret.Add("jih","LLL");
             return ret;
         }
+
+        public object sum(ObiLangEngine engine, string num1, object num2)
+        {
+            object val1 = engine.GetVar(num1);
+            Type tipo1 = engine.GetVar(num1).GetType();
+            Type tipo2 = num2.GetType();
+            if (tipo1.IsPrimitive && tipo2.IsPrimitive)
+            {
+                var value = Convert.ToDouble(val1) + Convert.ToDouble(num2);
+                engine.RemoveVar(num1);
+                engine.AddVar(num1, value);
+                return value;
+            }
+            return null;
+        }
+
+        public object rest(ObiLangEngine engine, string num1, object num2)
+        {
+            object val1 = engine.GetVar(num1);
+            Type tipo1 = engine.GetVar(num1).GetType();
+            Type tipo2 = num2.GetType();
+            if (tipo1.IsPrimitive && tipo2.IsPrimitive)
+            {
+                var value = Convert.ToDouble(val1) - Convert.ToDouble(num2);
+                engine.RemoveVar(num1);
+                engine.AddVar(num1, value);
+                return value;
+            }
+            return null;
+        }
+
+        public object mult(ObiLangEngine engine, string num1, object num2)
+        {
+            object val1 = engine.GetVar(num1);
+            Type tipo1 = engine.GetVar(num1).GetType();
+            Type tipo2 = num2.GetType();
+            if (tipo1.IsPrimitive && tipo2.IsPrimitive)
+            {
+                var value = Convert.ToDouble(val1) * Convert.ToDouble(num2);
+                engine.RemoveVar(num1);
+                engine.AddVar(num1, value);
+                return value;
+            }
+            return null;
+        }
+
+        public object div(ObiLangEngine engine, string num1, object num2)
+        {
+            object val1 = engine.GetVar(num1);
+            Type tipo1 = engine.GetVar(num1).GetType();
+            Type tipo2 = num2.GetType();
+            if (tipo1.IsPrimitive && tipo2.IsPrimitive)
+            {
+                var value = Convert.ToDouble(val1) / Convert.ToDouble(num2);
+                engine.RemoveVar(num1);
+                engine.AddVar(num1, value);
+                return value;
+            }
+            return null;
+        }
+        public bool not_null(object obj) => obj != null;
+        public bool is_null(object obj) => obj == null;
     }
 }

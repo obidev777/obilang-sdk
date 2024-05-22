@@ -12,31 +12,40 @@ using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using System.Xml;
-using ObiLang.Core;
+using Obi.Script;
 using obisoft.net.html;
 
 namespace ObiLang
 {
     class App
     {
-        public static ObiLangEngine Engine;
+        public static ObiScriptEngine Engine;
 
         static void Main(string[] args)
         {
+            gui.forms.XmlForm.Load("win.xml");
+
             string[] argss = args;
-            //argss = new string[] {"main.obi"};
+            argss = new string[] {"main.obi"};
 
             if (argss.Length > 0)
             {
                 if (argss[0] == "--version")
                 {
-                    Console.WriteLine("ObiLang Version 1.0 (By ObisoftDev) @Copyrigth 2024");
+                    Console.WriteLine("ObiLang Version 1.1 (By ObisoftDev) @Copyrigth 2024");
                     return;
                 }
-                Engine = new ObiLangEngine();
+                Engine = new ObiScriptEngine();
                 Engine.Vars.Add("platform", "windows");
                 Engine.Vars.Add("console", new ConsoleUtil());
-                Console.WriteLine(Engine.ExecuteFile(argss[0]));
+                try
+                {
+                    string output = Engine.ExecuteFile(argss[0]);
+                    Console.WriteLine(output);
+                }
+                catch (Exception ex){
+                    Console.WriteLine($"Error Line: {Engine.GetLineExecution()} - ({ex.Message})");
+                }
             }
             Console.WriteLine("Exit in 5 seconds...");
             Thread.Sleep(5000);

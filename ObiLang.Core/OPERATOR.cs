@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ObiLang.Core
+namespace Obi.Script
 {
     public class OPERATOR
     {
@@ -12,7 +12,7 @@ namespace ObiLang.Core
         "++","+","--","-","**","*","//","/","<","!<",">","!>","<=",">=","=","!="
         };
         public static string[] OperatorsException = new string[]{
-        "->"," "
+        "->"," ","'"
         };
 
         public static string GetOperator(string cmd)
@@ -42,12 +42,12 @@ namespace ObiLang.Core
             return false;
         }
 
-        public static object Execute(ObiLangEngine engine,string op)
+        public static object Execute(ObiScriptEngine engine,string op)
         {
             return null;
         }
 
-        public static object Eval(ObiLangEngine engine, string arg)
+        public static object Eval(ObiScriptEngine engine, string arg)
         {
             if (arg.Contains("="))
             {
@@ -150,15 +150,28 @@ namespace ObiLang.Core
                 {
                     if (tokens[1] != "")
                     {
-                        plus = double.Parse(tokens[1]);
+                        plus = double.Parse(engine.GetArgs(tokens[1])[0].ToString());
                     }
                 }
                 value+=plus;
-                string newv = vname.Replace("$","");
-                engine.RemoveVar(newv);
-                object ret = Convert.ChangeType(value, vobj.GetType());
-                engine.AddVar(newv,ret);
-                return ret;
+                if (!vname.Contains("::"))
+                {
+                    string newv = vname.Replace("$", "");
+                    engine.RemoveVar(newv);
+                    object ret = Convert.ChangeType(value, vobj.GetType());
+                    engine.AddVar(newv, ret);
+                    return ret;
+                }
+                else
+                {
+                    object ret = Convert.ChangeType(value, vobj.GetType());
+                    ICacheHandle handle = engine.GetHandleFrom(vname);
+                    if (handle != null)
+                    {
+                        handle.Invoke(new object[] {ret});
+                    }
+                    return ret;
+                }
             }
             else if (arg.Contains("--"))
             {
@@ -171,15 +184,28 @@ namespace ObiLang.Core
                 {
                     if (tokens[1] != "")
                     {
-                        plus = double.Parse(tokens[1]);
+                        plus = double.Parse(engine.GetArgs(tokens[1])[0].ToString());
                     }
                 }
                 value -= plus;
-                string newv = vname.Replace("$", "");
-                engine.RemoveVar(newv);
-                object ret = Convert.ChangeType(value, vobj.GetType());
-                engine.AddVar(newv, ret);
-                return ret;
+                if (!vname.Contains("::"))
+                {
+                    string newv = vname.Replace("$", "");
+                    engine.RemoveVar(newv);
+                    object ret = Convert.ChangeType(value, vobj.GetType());
+                    engine.AddVar(newv, ret);
+                    return ret;
+                }
+                else
+                {
+                    object ret = Convert.ChangeType(value, vobj.GetType());
+                    ICacheHandle handle = engine.GetHandleFrom(vname);
+                    if (handle != null)
+                    {
+                        handle.Invoke(new object[] { ret });
+                    }
+                    return ret;
+                }
             }
             else if (arg.Contains("**"))
             {
@@ -192,15 +218,28 @@ namespace ObiLang.Core
                 {
                     if (tokens[1] != "")
                     {
-                        plus = double.Parse(tokens[1]);
+                        plus = double.Parse(engine.GetArgs(tokens[1])[0].ToString());
                     }
                 }
                 value *= plus;
-                string newv = vname.Replace("$", "");
-                engine.RemoveVar(newv);
-                object ret = Convert.ChangeType(value, vobj.GetType());
-                engine.AddVar(newv, ret);
-                return ret;
+                if (!vname.Contains("::"))
+                {
+                    string newv = vname.Replace("$", "");
+                    engine.RemoveVar(newv);
+                    object ret = Convert.ChangeType(value, vobj.GetType());
+                    engine.AddVar(newv, ret);
+                    return ret;
+                }
+                else
+                {
+                    object ret = Convert.ChangeType(value, vobj.GetType());
+                    ICacheHandle handle = engine.GetHandleFrom(vname);
+                    if (handle != null)
+                    {
+                        handle.Invoke(new object[] { ret });
+                    }
+                    return ret;
+                }
             }
             else if (arg.Contains("+"))
             {
@@ -213,13 +252,26 @@ namespace ObiLang.Core
                 {
                     if (tokens[1] != "")
                     {
-                        plus = double.Parse(tokens[1]);
+                        plus = double.Parse(engine.GetArgs(tokens[1])[0].ToString());
                     }
                 }
                 value += plus;
-                string newv = vname.Replace("$", "");
-                object ret = Convert.ChangeType(value, vobj.GetType());
-                return ret;
+                if (!vname.Contains("::"))
+                {
+                    string newv = vname.Replace("$", "");
+                    object ret = Convert.ChangeType(value, vobj.GetType());
+                    return ret;
+                }
+                else
+                {
+                    object ret = Convert.ChangeType(value, vobj.GetType());
+                    ICacheHandle handle = engine.GetHandleFrom(vname);
+                    if (handle != null)
+                    {
+                        handle.Invoke(new object[] { ret });
+                    }
+                    return ret;
+                }
             }
             else if (arg.Contains("-"))
             {
@@ -232,13 +284,26 @@ namespace ObiLang.Core
                 {
                     if (tokens[1] != "")
                     {
-                        plus = double.Parse(tokens[1]);
+                        plus = double.Parse(engine.GetArgs(tokens[1])[0].ToString());
                     }
                 }
                 value -= plus;
-                string newv = vname.Replace("$", "");
-                object ret = Convert.ChangeType(value, vobj.GetType());
-                return ret;
+                if (!vname.Contains("::"))
+                {
+                    string newv = vname.Replace("$", "");
+                    object ret = Convert.ChangeType(value, vobj.GetType());
+                    return ret;
+                }
+                else
+                {
+                    object ret = Convert.ChangeType(value, vobj.GetType());
+                    ICacheHandle handle = engine.GetHandleFrom(vname);
+                    if (handle != null)
+                    {
+                        handle.Invoke(new object[] { ret });
+                    }
+                    return ret;
+                }
             }
             else if (arg.Contains("*"))
             {
@@ -251,13 +316,26 @@ namespace ObiLang.Core
                 {
                     if (tokens[1] != "")
                     {
-                        plus = double.Parse(tokens[1]);
+                        plus = double.Parse(engine.GetArgs(tokens[1])[0].ToString());
                     }
                 }
                 value *= plus;
-                string newv = vname.Replace("$", "");
-                object ret = Convert.ChangeType(value, vobj.GetType());
-                return ret;
+                if (!vname.Contains("::"))
+                {
+                    string newv = vname.Replace("$", "");
+                    object ret = Convert.ChangeType(value, vobj.GetType());
+                    return ret;
+                }
+                else
+                {
+                    object ret = Convert.ChangeType(value, vobj.GetType());
+                    ICacheHandle handle = engine.GetHandleFrom(vname);
+                    if (handle != null)
+                    {
+                        handle.Invoke(new object[] { ret });
+                    }
+                    return ret;
+                }
             }
             else if (arg.Contains("/"))
             {
@@ -270,13 +348,26 @@ namespace ObiLang.Core
                 {
                     if (tokens[1] != "")
                     {
-                        plus = double.Parse(tokens[1]);
+                        plus = double.Parse(engine.GetArgs(tokens[1])[0].ToString());
                     }
                 }
                 value /= plus;
-                string newv = vname.Replace("$", "");
-                object ret = Convert.ChangeType(value, vobj.GetType());
-                return ret;
+                if (!vname.Contains("::"))
+                {
+                    string newv = vname.Replace("$", "");
+                    object ret = Convert.ChangeType(value, vobj.GetType());
+                    return ret;
+                }
+                else
+                {
+                    object ret = Convert.ChangeType(value, vobj.GetType());
+                    ICacheHandle handle = engine.GetHandleFrom(vname);
+                    if (handle != null)
+                    {
+                        handle.Invoke(new object[] { ret });
+                    }
+                    return ret;
+                }
             }
 
 

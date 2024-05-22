@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ObiLang.Core
+namespace Obi.Script
 {
 
     public class FUNC
@@ -13,13 +13,13 @@ namespace ObiLang.Core
         public string CMD { get; set; }
         public string[] Lines;
         public string[] Args { get; set; }
-        public ObiLangEngine engine;
+        public ObiScriptEngine engine;
         public static bool IS(string cmd)
         {
             return cmd.Contains("func");
         }
 
-        public FUNC(string[] lines, string[] args, string cmd, ObiLangEngine eng)
+        public FUNC(string[] lines, string[] args, string cmd, ObiScriptEngine eng)
         {
             CMD = cmd;
             Lines = lines;

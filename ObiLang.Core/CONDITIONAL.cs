@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ObiLang.Core
+namespace Obi.Script
 {
     public class CONDITIONAL
     {
@@ -27,7 +27,7 @@ namespace ObiLang.Core
             ElseLines = elselines;
         }
 
-        public object Execute(ObiLangEngine engine)
+        public object Execute(ObiScriptEngine engine)
         {
             if(CMD=="if")
                 if (Condition)

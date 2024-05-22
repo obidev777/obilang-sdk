@@ -5,19 +5,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ObiLang.Core
+namespace Obi.Script
 {
     public class OBJFUNCS
     {
-        public void printl(ObiLangEngine engine,object text)
+        public void printl(ObiScriptEngine engine,object text)
         {
             Console.WriteLine(text.ToString());
         }
-        public void print(ObiLangEngine engine, object text)
+        public void printl(ObiScriptEngine engine, string text)
+        {
+            Console.WriteLine(text.ToString());
+        }
+        public void print(ObiScriptEngine engine, object text)
         {
             Console.Write(text.ToString());
         }
-        public string write(ObiLangEngine engine, object obj)
+        public string write(ObiScriptEngine engine, object obj)
         {
             if (obj != null)
             {
@@ -25,10 +29,10 @@ namespace ObiLang.Core
             }
             return "null";
         }
-        public string incrust(ObiLangEngine engine, string path) {
+        public string incrust(ObiScriptEngine engine, string path) {
             return engine.Execute(File.ReadAllText($"www/{path}"));
         }
-        public void delete(ObiLangEngine engine,string var)
+        public void delete(ObiScriptEngine engine,string var)
         {
             engine.Vars.Remove(var);
         }
@@ -46,7 +50,7 @@ namespace ObiLang.Core
             return ret;
         }
 
-        public object sum(ObiLangEngine engine, string num1, object num2)
+        public object sum(ObiScriptEngine engine, string num1, object num2)
         {
             object val1 = engine.GetVar(num1);
             Type tipo1 = engine.GetVar(num1).GetType();
@@ -61,7 +65,7 @@ namespace ObiLang.Core
             return null;
         }
 
-        public object rest(ObiLangEngine engine, string num1, object num2)
+        public object rest(ObiScriptEngine engine, string num1, object num2)
         {
             object val1 = engine.GetVar(num1);
             Type tipo1 = engine.GetVar(num1).GetType();
@@ -76,7 +80,7 @@ namespace ObiLang.Core
             return null;
         }
 
-        public object mult(ObiLangEngine engine, string num1, object num2)
+        public object mult(ObiScriptEngine engine, string num1, object num2)
         {
             object val1 = engine.GetVar(num1);
             Type tipo1 = engine.GetVar(num1).GetType();
@@ -91,7 +95,7 @@ namespace ObiLang.Core
             return null;
         }
 
-        public object div(ObiLangEngine engine, string num1, object num2)
+        public object div(ObiScriptEngine engine, string num1, object num2)
         {
             object val1 = engine.GetVar(num1);
             Type tipo1 = engine.GetVar(num1).GetType();
@@ -107,5 +111,7 @@ namespace ObiLang.Core
         }
         public bool not_null(object obj) => obj != null;
         public bool is_null(object obj) => obj == null;
+
+        public Type typof(object obj) => obj.GetType();
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ObiLang.Core
+namespace Obi.Script
 {
     public class FOR
     {
@@ -26,14 +26,14 @@ namespace ObiLang.Core
             Array = array;
         }
 
-        public void Logic(ObiLangEngine engine, object item)
+        public void Logic(ObiScriptEngine engine, object item)
         {
             engine.AddVar(VName, item);
             engine.Logic(Lines, this);
             engine.RemoveVar(VName);
         }
 
-        public object Execute(ObiLangEngine engine)
+        public object Execute(ObiScriptEngine engine)
         {
             if (Array.GetType().Name.Contains("List") || Array.GetType().Name.Contains("Dictionary"))
             {

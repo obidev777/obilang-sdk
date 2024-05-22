@@ -5,10 +5,11 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ObiLang.Core
+namespace Obi.Script
 {
     public interface ICacheHandle
     {
+        void SetInstance(object instance);
         bool IsStatic();
         bool IsMethod();
         bool IsEvent();
@@ -16,9 +17,11 @@ namespace ObiLang.Core
         string GetName();
         int GetArgs();
         object Invoke(object instance,object[] args);
+        object Invoke(object[] args);
     }
     public class CacheHandleMethod: ICacheHandle
     {
+        
         public string Name { get; set; }
         public MethodInfo Method { get; set; }
         public int Args { get; set; } = 0;
@@ -31,11 +34,18 @@ namespace ObiLang.Core
 
         public object Invoke(object instance, object[] args) => Method.Invoke(instance, args);
 
+        
+
         public bool IsEvent() => false;
 
         public bool IsMethod() => true;
 
         public bool IsStatic() => Method.IsStatic;
+
+
+        public object Instance { get; set; } = null;
+        public void SetInstance(object instance) => Instance = instance;
+        public object Invoke(object[] args) => Invoke(Instance, args);
     }
     public class CacheHandleProperty:ICacheHandle
     {
@@ -71,6 +81,10 @@ namespace ObiLang.Core
             }
             return ret;
         }
+
+        public object Instance { get; set; } = null;
+        public void SetInstance(object instance) => Instance = instance;
+        public object Invoke(object[] args) => Invoke(Instance, args);
 
         public bool IsStatic() => false;
     }
@@ -131,6 +145,10 @@ namespace ObiLang.Core
             }
             return ret;
         }
+
+        public object Instance { get; set; } = null;
+        public void SetInstance(object instance) => Instance = instance;
+        public object Invoke(object[] args) => Invoke(Instance, args);
     }
     public class CacheHandleEvent : ICacheHandle
     {
@@ -162,6 +180,9 @@ namespace ObiLang.Core
             }
             return ret;
         }
+        public object Instance { get; set; } = null;
+        public void SetInstance(object instance) => Instance = instance;
+        public object Invoke(object[] args) => Invoke(Instance, args);
     }
     public class CacheHandle
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -42,22 +43,32 @@ namespace gui.forms
                 {
                     if (attr.Name == prop.Name)
                     {
-                        if (prop.GetValue(obj).GetType() == typeof(Int32))
+                        object val = prop.GetValue(obj);
+                        Type valType = val.GetType();
+                        object setvalue = attr.Value;
+                        if (valType.BaseType == typeof(Enum))
                         {
-                            prop.SetValue(obj, int.Parse(attr.Value));
+                            setvalue = Enum.Parse(valType,setvalue.ToString());
                         }
-                        else if (prop.GetValue(obj).GetType() == typeof(Int16))
+                        else if (valType == typeof(Color))
                         {
-                            prop.SetValue(obj, short.Parse(attr.Value));
+                            setvalue = ColorTranslator.FromHtml(setvalue.ToString());
                         }
-                        else if (prop.GetValue(obj).GetType() == typeof(Int64))
+                        else if (valType == typeof(Point))
                         {
-                            prop.SetValue(obj, long.Parse(attr.Value));
+                            string[] size = setvalue.ToString().Split(',');
+                            setvalue = new Point(int.Parse(size[0]), int.Parse(size[1]));
+                        }
+                        else if (valType == typeof(Size))
+                        {
+                            string[] size = setvalue.ToString().Split(',');
+                            setvalue = new Size(int.Parse(size[0]), int.Parse(size[1]));
                         }
                         else
                         {
-                            prop.SetValue(obj, attr.Value);
+                            setvalue = Convert.ChangeType(attr.Value, valType);
                         }
+                        prop.SetValue(obj, setvalue);
                     }
                 }
             }
